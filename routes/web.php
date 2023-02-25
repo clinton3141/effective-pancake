@@ -18,4 +18,5 @@ Route::get('/', [ShoppingListController::class, 'showAll']);
 
 Route::view('/item', 'add-item');
 Route::post('/v1/item', [ShoppingListController::class, 'add']);
+Route::patch('/v1/item/{id}', [ShoppingListController::class, 'update']);
 Route::delete('/v1/item/{id}', [ShoppingListController::class, 'delete']);

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\ShoppingListItem;
 use Illuminate\Contracts\Session\Session;
 
 class ListRepository {
@@ -11,10 +12,11 @@ class ListRepository {
 
     public function getAll(): array
     {
+        // dd($this->session->get(self::SESSION_TAG));
         return $this->session->get(self::SESSION_TAG) ?? [];
     }
 
-    public function add(string $item): void
+    public function add(ShoppingListItem $item): void
     {
         $shoppingList = $this->getAll();
 

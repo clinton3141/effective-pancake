@@ -9,7 +9,7 @@
     @else
     <ul role="list" class="max-w-md marker:text-red-400 list-disc pl-5 space-y-3">
         @foreach ($shoppingList as $item)
-            <li>{{ $item }}</li>
+            <li>{{ $item->name }}</li>
         @endforeach
     </ul>
     @endif

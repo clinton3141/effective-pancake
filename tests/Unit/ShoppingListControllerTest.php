@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Models\ShoppingListItem;
 use App\Repositories\ListRepository;
 use Tests\TestCase;
 use Mockery;
@@ -11,15 +12,16 @@ class ShoppingListControllerTest extends TestCase
 {
     public function test_controller_returns_populated_shopping_list(): void
     {
+        $list = [new ShoppingListItem('Cherries')];
         $this->instance(
             ListRepository::class,
-            Mockery::mock(ListRepository::class, function (MockInterface $mock) {
-                $mock->shouldReceive('getAll')->once()->andReturn(['Cherries']);
+            Mockery::mock(ListRepository::class, function (MockInterface $mock) use ($list) {
+                $mock->shouldReceive('getAll')->once()->andReturn($list);
             })
         );
 
         $this->call('GET', '/')
-            ->assertViewHas('shoppingList', ['Cherries']);
+            ->assertViewHas('shoppingList', $list);
     }
 
     public function test_controller_adds_item_to_shopping_list(): void
@@ -28,7 +30,9 @@ class ShoppingListControllerTest extends TestCase
             ListRepository::class,
             Mockery::mock(ListRepository::class, function (MockInterface $mock) {
                 $mock->shouldReceive('add')->once('Sugar');
-                $mock->shouldReceive('getAll')->andReturns(['Sugar']);
+                $mock->shouldReceive('getAll')->andReturns(
+                    [new ShoppingListItem('Sugar')]
+                );
             })
         );
 

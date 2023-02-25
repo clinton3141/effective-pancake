@@ -1,6 +1,7 @@
 @extends('app')
 
 @section('title', 'Your list')
+@section('page_heading', 'Your shopping list')
 
 @section('content')
 @if (count($shoppingList) === 0)
@@ -11,5 +12,6 @@
             <li>{{ $item }}</li>
         @endforeach
     </ul>
-@endif
+    @endif
+    <p><a href="/item">Add an item</a></p>
 @endsection

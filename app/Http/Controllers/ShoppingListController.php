@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+
 use App\Repositories\ListRepository;
 
 class ShoppingListController extends Controller
@@ -13,5 +16,16 @@ class ShoppingListController extends Controller
         $shoppingList = $listRepository->getAll();
 
         return view('index', ['shoppingList' => $shoppingList]);
+    }
+
+    public function add(Request $request, ListRepository $listRepository): RedirectResponse
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255'
+        ]);
+
+        $listRepository->add($validated['name']);
+
+        return redirect('/');
     }
 }

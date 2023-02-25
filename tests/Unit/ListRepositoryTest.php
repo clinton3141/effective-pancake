@@ -22,4 +22,15 @@ class ListRepositoryTest extends TestCase
 
         $this->assertThat($repo->getAll(), $this->equalTo(['Pasta']));
     }
+
+    public function test_should_add_items_to_list()
+    {
+        $repo = app(ListRepository::class);
+
+        $this->withSession([ListRepository::SESSION_TAG => ['Cheese', 'Butter']]);
+
+        $repo->add('Ham');
+
+        $this->assertThat($repo->getAll(), $this->equalTo(['Cheese', 'Butter', 'Ham']));
+    }
 }

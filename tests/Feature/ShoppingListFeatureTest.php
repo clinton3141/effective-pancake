@@ -26,4 +26,16 @@ class ShoppingListFeatureTest extends TestCase
             ->assertStatus(200)
             ->assertSeeInOrder(['Tomatos', 'Bread']);
     }
+
+    public function test_shopping_list_items_are_added(): void
+    {
+        $this->withSession(
+            [ListRepository::SESSION_TAG => ['Flour']]
+        );
+
+        $this->followingRedirects();
+
+        $this->post('/v1/item', ['name' => 'Sugar'])
+            ->assertSeeInOrder(['Flour', 'Sugar']);
+    }
 }

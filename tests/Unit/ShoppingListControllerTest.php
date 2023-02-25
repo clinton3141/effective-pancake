@@ -55,4 +55,18 @@ class ShoppingListControllerTest extends TestCase
         $this->call('DELETE', '/v1/item/' . $sherbert->id)
             ->assertRedirect('/');
     }
+
+    public function test_controller_marks_item_as_bought_and_redirects_home(): void
+    {
+        $candyfloss = new ShoppingListItem('Candyfloss');
+        $this->instance(
+            ListRepository::class,
+            Mockery::mock(ListRepository::class, function (MockInterface $mock) use ($candyfloss) {
+                $mock->shouldReceive('buy')->withArgs([$candyfloss->id]);
+            })
+        );
+
+        $this->call('PATCH', '/v1/item/' . $candyfloss->id)
+            ->assertRedirect('/');
+    }
 }

@@ -90,4 +90,19 @@ class ListRepositoryTest extends TestCase
         $this->assertTrue($repo->has($chicken->id));
     }
 
+    public function test_marks_item_as_bought()
+    {
+        $repo = app(ListRepository::class);
+
+        $pringles = new ShoppingListItem(name: 'Pringles', isBought: false);
+
+        $repo->add($pringles);
+
+        $repo->buy($pringles->id);
+
+        $this->assertTrue(
+            $repo->getItem($pringles->id)->isBought
+        );
+    }
+
 }

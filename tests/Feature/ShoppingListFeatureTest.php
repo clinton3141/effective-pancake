@@ -59,4 +59,20 @@ class ShoppingListFeatureTest extends TestCase
         $this->delete('/v1/item/' . $eggs->id)
             ->assertDontSee(['Eggs']);
     }
+
+    public function test_shopping_list_items_are_marked_as_bought(): void
+    {
+        $apples = new ShoppingListItem('Granny Smith Apples');
+        $this->withSession([
+            ListRepository::SESSION_TAG => [
+                $apples
+            ]
+        ]);
+
+        $this->followingRedirects();
+
+        $this->patch('/v1/item/' . $apples->id)
+            ->assertSee(['Granny Smith Apples'])
+            ->assertSee('data-bought="true"', escape: false);
+    }
 }

@@ -42,4 +42,15 @@ class ShoppingListController extends Controller
 
         return redirect('/');
     }
+
+    public function update(Request $request, ListRepository $listRepository, string $id): RedirectResponse
+    {
+        // if (!$listRepository->has($id)) {
+            // TODO: 404 if not found
+        // }
+
+        $listRepository->buy($id);
+
+        return redirect('/');
+    }
 }

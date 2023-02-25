@@ -15,3 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [ShoppingListController::class, 'showAll']);
+
+Route::view('/item', 'add-item');
+Route::post('/v1/item', [ShoppingListController::class, 'add']);

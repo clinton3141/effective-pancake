@@ -1,0 +1,49 @@
+on: push
+name: CI
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:8.2
+    env:
+      DB_DATABASE: laravel
+      DB_USERNAME: root
+      DB_PASSWORD: password
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+
+    services:
+      mariadb:
+        image: 'mariadb:10'
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: false
+          MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+          MYSQL_DATABASE: '${DB_DATABASE}'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        fetch-depth: 1
+
+    - name: Install composer dependencies
+      run: |
+        composer install --no-scripts
+
+    - name: Install npm dependencies
+      run: |
+        npm install
+
+    - name: npm build
+      run: |
+        npm run build
+
+    - name: Prepare Laravel Application
+      run: |
+        cp .env.ci .env
+        php artisan key:generate
+
+    - name: Run Testsuite
+      run: vendor/bin/phpunit tests/

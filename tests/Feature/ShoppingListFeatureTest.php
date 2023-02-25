@@ -44,4 +44,19 @@ class ShoppingListFeatureTest extends TestCase
         $this->post('/v1/item', ['name' => 'Sugar'])
             ->assertSeeInOrder(['Flour', 'Sugar']);
     }
+
+    public function test_shopping_list_items_are_deleted(): void
+    {
+        $eggs = new ShoppingListItem('Eggs');
+        $this->withSession([
+            ListRepository::SESSION_TAG => [
+                $eggs
+            ]
+        ]);
+
+        $this->followingRedirects();
+
+        $this->delete('/v1/item/' . $eggs->id)
+            ->assertDontSee(['Eggs']);
+    }
 }

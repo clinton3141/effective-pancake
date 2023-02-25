@@ -31,4 +31,15 @@ class ShoppingListController extends Controller
 
         return redirect('/');
     }
+
+    public function delete(ListRepository $listRepository, string $id): RedirectResponse
+    {
+        // if (!$listRepository->has($id)) {
+            // TODO: 404 if not found
+        // }
+
+        $listRepository->remove($id);
+
+        return redirect('/');
+    }
 }

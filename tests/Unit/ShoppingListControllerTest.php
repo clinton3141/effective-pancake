@@ -39,6 +39,18 @@ class ShoppingListControllerTest extends TestCase
         $this->followingRedirects();
 
         $this->call('POST', '/v1/item', ['name' => 'Sugar'])
-            ->assertSee(['Sugar']);
+
+    public function test_controller_deletes_items_from_shopping_list_and_redirects_home(): void
+    {
+        $sherbert = new ShoppingListItem('Sherbert');
+        $this->instance(
+            ListRepository::class,
+            Mockery::mock(ListRepository::class, function (MockInterface $mock) use ($sherbert) {
+                $mock->shouldReceive('remove')->withArgs([$sherbert->id]);
+            })
+        );
+
+        $this->call('DELETE', '/v1/item/' . $sherbert->id)
+            ->assertRedirect('/');
     }
 }

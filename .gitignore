@@ -21,3 +21,13 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+
+# added by composer create-project laravel/laravel
+/.phpunit.cache
+/public/build
+/storage/*.key
+.env.backup
+.env.production
+auth.json
+/.fleet
+.idea

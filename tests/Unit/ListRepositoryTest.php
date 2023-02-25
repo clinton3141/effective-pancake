@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\ShoppingListItem;
 use App\Repositories\ListRepository;
 use Tests\TestCase;
 
@@ -18,19 +19,35 @@ class ListRepositoryTest extends TestCase
     {
         $repo = app(ListRepository::class);
 
-        $this->withSession([ListRepository::SESSION_TAG => ['Pasta']]);
+        $item = new ShoppingListItem('Pasta');
 
-        $this->assertThat($repo->getAll(), $this->equalTo(['Pasta']));
+        $this->withSession([
+            ListRepository::SESSION_TAG => [$item]
+        ]);
+
+        $this->assertThat(
+            $repo->getAll(),
+            $this->equalTo([$item])
+        );
     }
 
     public function test_should_add_items_to_list()
     {
         $repo = app(ListRepository::class);
 
-        $this->withSession([ListRepository::SESSION_TAG => ['Cheese', 'Butter']]);
+        $cheese = new ShoppingListItem('Cheese');
+        $butter = new ShoppingListItem('Butter');
+        $ham = new ShoppingListItem('Ham');
 
-        $repo->add('Ham');
+        $this->withSession([
+            ListRepository::SESSION_TAG => [$cheese, $butter]]
+        );
 
-        $this->assertThat($repo->getAll(), $this->equalTo(['Cheese', 'Butter', 'Ham']));
+        $repo->add($ham);
+
+        $this->assertThat(
+            $repo->getAll(),
+            $this->equalTo([$cheese, $butter, $ham])
+        );
     }
 }

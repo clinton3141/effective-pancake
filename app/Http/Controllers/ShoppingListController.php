@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ShoppingListItem;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
@@ -24,7 +25,9 @@ class ShoppingListController extends Controller
             'name' => 'required|string|max:255'
         ]);
 
-        $listRepository->add($validated['name']);
+        $listRepository->add(
+            new ShoppingListItem($validated['name'])
+        );
 
         return redirect('/');
     }

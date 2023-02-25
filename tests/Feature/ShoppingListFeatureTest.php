@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\ShoppingListItem;
 use App\Repositories\ListRepository;
 use Tests\TestCase;
 
@@ -18,9 +19,12 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_shown(): void
     {
-        $this->withSession(
-            [ListRepository::SESSION_TAG => ['Tomatos', 'Bread']]
-        );
+        $this->withSession([
+            ListRepository::SESSION_TAG => [
+                new ShoppingListItem('Tomatos'),
+                new ShoppingListItem('Bread')
+            ]
+        ]);
 
         $this->get('/')
             ->assertStatus(200)
@@ -29,9 +33,11 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_added(): void
     {
-        $this->withSession(
-            [ListRepository::SESSION_TAG => ['Flour']]
-        );
+        $this->withSession([
+            ListRepository::SESSION_TAG => [
+                new ShoppingListItem('Flour')
+            ]
+        ]);
 
         $this->followingRedirects();
 

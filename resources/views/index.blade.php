@@ -14,7 +14,7 @@
                     <div
                         class="flex-auto pt-1 {{ $item->isBought ? " text-stone-400 line-through" : ""}}"
                         data-bought="{{ $item->isBought ? 'true' : 'false' }}">
-                        {{ $item->name }} (&pound;{{ $item->price }})
+                        {{ $item->name }} (&pound;{{ number_format($item->price, 2) }})
                     </div>
                     @if (!$item->isBought)
                     <div class="self-end">
@@ -41,7 +41,7 @@
             </li>
         @endforeach
     </ul>
-    <p class="text-right pr-3 mb-5">Total cost: &pound;{{ $totalCost }}</p>
+    <p class="text-right pr-3 mb-5">Total cost: &pound;{{ number_format($totalCost, 2) }}</p>
     @endif
 
     <div class="flex">

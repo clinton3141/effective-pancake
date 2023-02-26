@@ -41,11 +41,11 @@ class ShoppingListFeatureTest extends TestCase
     public function test_shopping_list_total_cost_is_shown(): void
     {
         ShoppingListItem::create(['name' => 'Rice', 'price' => 0.99]);
-        ShoppingListItem::create(['name' => 'Pasta', 'price' => 1.19]);
+        ShoppingListItem::create(['name' => 'Pasta', 'price' => 1.11]);
 
         $this->get('/')
             ->assertStatus(200)
-            ->assertSee('Total cost: &pound;2.18', escape: false);
+            ->assertSee('Total cost: &pound;2.10', escape: false);
     }
 
     public function test_shopping_list_items_are_deleted(): void

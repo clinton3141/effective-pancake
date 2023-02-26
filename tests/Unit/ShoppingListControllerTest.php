@@ -23,9 +23,16 @@ class ShoppingListControllerTest extends TestCase
 
     public function test_controller_adds_item_to_shopping_list_and_redirects_home(): void
     {
-        $this->call('POST', '/v1/item', ['name' => 'Sugar'])->assertRedirect('/');
+        $this->call(
+            'POST',
+            '/v1/item',
+            ['name' => 'Sugar', 'price' => '0.95']
+        )->assertRedirect('/');
 
-        $this->assertDatabaseHas('shoppinglistitems', ['name' => 'Sugar']);
+        $this->assertDatabaseHas(
+            'shoppinglistitems',
+            ['name' => 'Sugar', 'price' => '0.95']
+        );
     }
 
     public function test_controller_deletes_items_from_shopping_list_and_redirects_home(): void

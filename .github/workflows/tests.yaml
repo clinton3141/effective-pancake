@@ -9,7 +9,7 @@ jobs:
       DB_DATABASE: laravel
       DB_USERNAME: root
       DB_PASSWORD: password
-      DB_HOST: 127.0.0.1
+      DB_HOST: mariadb
       DB_PORT: 3306
 
     services:

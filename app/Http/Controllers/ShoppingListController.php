@@ -62,7 +62,7 @@ class ShoppingListController extends Controller
         return redirect('/');
     }
 
-    public function update(string $id): RedirectResponse
+    public function bought(string $id): RedirectResponse
     {
         $item = ShoppingListItem::find($id);
         // if (!$item) {

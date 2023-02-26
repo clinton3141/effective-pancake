@@ -61,7 +61,7 @@ class ShoppingListControllerTest extends TestCase
     {
         $candyfloss = ShoppingListItem::create(['name' => 'Candyfloss', 'isBought' => false ]);
 
-        $this->call('PATCH', '/v1/item/' . $candyfloss->id)
+        $this->call('POST', '/v1/item/' . $candyfloss->id . '/bought')
             ->assertRedirect('/');
 
         $this->assertDatabaseHas('shoppinglistitems', [

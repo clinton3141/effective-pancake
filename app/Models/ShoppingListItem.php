@@ -22,5 +22,5 @@ class ShoppingListItem extends Model
         'isBought' => false,
     ];
 
-    protected $fillable = ['name', 'isBought', 'order'];
+    protected $fillable = ['name', 'isBought', 'order', 'price'];
 }

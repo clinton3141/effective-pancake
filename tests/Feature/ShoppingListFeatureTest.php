@@ -30,12 +30,12 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_added(): void
     {
-        ShoppingListItem::create(['name' => 'Flour']);
+        ShoppingListItem::create(['name' => 'Flour', 'price' => '1.95']);
 
         $this->followingRedirects();
 
-        $this->post('/v1/item', ['name' => 'Sugar'])
-            ->assertSeeInOrder(['Flour', 'Sugar']);
+        $this->post('/v1/item', ['name' => 'Sugar', 'price' => '0.95'])
+            ->assertSeeInOrder(['Flour (&pound;1.95)', 'Sugar (&pound;0.95)'], escape: false);
     }
 
     public function test_shopping_list_items_are_deleted(): void

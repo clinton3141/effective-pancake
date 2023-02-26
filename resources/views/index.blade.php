@@ -14,7 +14,7 @@
                     <div
                         class="flex-auto pt-1 {{ $item->isBought ? " text-stone-400 line-through" : ""}}"
                         data-bought="{{ $item->isBought ? 'true' : 'false' }}">
-                        {{ $item->name }}
+                        {{ $item->name }} (&pound;{{ $item->price }})
                     </div>
                     @if (!$item->isBought)
                     <div class="self-end">

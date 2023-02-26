@@ -25,7 +25,8 @@ class ShoppingListController extends Controller
     public function add(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
+            'price' => 'required|string|min:0|max:99999.99|regex:/^[0-9]{0,5}(?:\.[0-9]{0,2})$/'
         ]);
 
         // possible race condition here. need a locking mechanism in the future
@@ -33,6 +34,7 @@ class ShoppingListController extends Controller
         ShoppingListItem::create([
             'name' => $validated['name'],
             'order' => $order + 1,
+            'price' => $validated['price']
         ]);
 
         return redirect('/');

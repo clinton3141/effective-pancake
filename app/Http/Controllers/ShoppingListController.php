@@ -2,54 +2,65 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ShoppingListItem;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 
-use App\Repositories\ListRepository;
+use App\Models\ShoppingListItem;
 
 class ShoppingListController extends Controller
 {
-    public function showAll(ListRepository $listRepository): View
+    public function showAll(): View
     {
-        $shoppingList = $listRepository->getAll();
+        $items = ShoppingListItem::orderBy('created_at')->get();
 
-        return view('index', ['shoppingList' => $shoppingList]);
+        return view(
+            'index',
+            ['shoppingList' => $items]
+        );
     }
 
-    public function add(Request $request, ListRepository $listRepository): RedirectResponse
+    public function add(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255'
         ]);
 
-        $listRepository->add(
-            new ShoppingListItem($validated['name'])
-        );
+        ShoppingListItem::create([
+            'name' => $validated['name']
+        ]);
 
         return redirect('/');
     }
 
-    public function delete(ListRepository $listRepository, string $id): RedirectResponse
+    public function delete(string $id): RedirectResponse
     {
-        // if (!$listRepository->has($id)) {
+        $item = ShoppingListItem::find($id);
+        // if (!$item) {
             // TODO: 404 if not found
         // }
 
-        $listRepository->remove($id);
+        if ($item)
+        {
+            $item->delete();
+        }
 
         return redirect('/');
     }
 
-    public function update(Request $request, ListRepository $listRepository, string $id): RedirectResponse
+    public function update(string $id): RedirectResponse
     {
-        // if (!$listRepository->has($id)) {
+        $item = ShoppingListItem::find($id);
+        // if (!$item) {
             // TODO: 404 if not found
         // }
 
-        $listRepository->buy($id);
+        if ($item)
+        {
+            $item->isBought = true;
+            $item->save();
+        }
 
         return redirect('/');
     }

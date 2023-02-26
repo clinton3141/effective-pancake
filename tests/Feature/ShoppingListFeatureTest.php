@@ -2,14 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\ShoppingListItem;
-use App\Repositories\ListRepository;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-// TODO: these test is coupled to implementation detail
-// using withSession. Please fix me.
+use App\Models\ShoppingListItem;
+
 class ShoppingListFeatureTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_shopping_list_is_empty_message(): void
     {
         $this->get('/')
@@ -19,12 +20,8 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_shown(): void
     {
-        $this->withSession([
-            ListRepository::SESSION_TAG => [
-                new ShoppingListItem('Tomatos'),
-                new ShoppingListItem('Bread')
-            ]
-        ]);
+        ShoppingListItem::create(['name' => 'Tomatos']);
+        ShoppingListItem::create(['name' => 'Bread']);
 
         $this->get('/')
             ->assertStatus(200)
@@ -33,11 +30,7 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_added(): void
     {
-        $this->withSession([
-            ListRepository::SESSION_TAG => [
-                new ShoppingListItem('Flour')
-            ]
-        ]);
+        ShoppingListItem::create(['name' => 'Flour']);
 
         $this->followingRedirects();
 
@@ -47,12 +40,7 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_deleted(): void
     {
-        $eggs = new ShoppingListItem('Eggs');
-        $this->withSession([
-            ListRepository::SESSION_TAG => [
-                $eggs
-            ]
-        ]);
+        $eggs = ShoppingListItem::create(['name' => 'Eggs']);
 
         $this->followingRedirects();
 
@@ -62,12 +50,7 @@ class ShoppingListFeatureTest extends TestCase
 
     public function test_shopping_list_items_are_marked_as_bought(): void
     {
-        $apples = new ShoppingListItem('Granny Smith Apples');
-        $this->withSession([
-            ListRepository::SESSION_TAG => [
-                $apples
-            ]
-        ]);
+        $apples = ShoppingListItem::create(['name' => 'Granny Smith Apples']);
 
         $this->followingRedirects();
 

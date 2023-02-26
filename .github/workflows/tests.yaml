@@ -9,16 +9,15 @@ jobs:
       DB_DATABASE: laravel
       DB_USERNAME: root
       DB_PASSWORD: password
-      DB_HOST: 127.0.0.1
+      DB_HOST: mariadb
       DB_PORT: 3306
 
     services:
       mariadb:
         image: 'mariadb:10'
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
-          MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-          MYSQL_DATABASE: '${DB_DATABASE}'
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: laravel
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -44,6 +43,9 @@ jobs:
       run: |
         cp .env.ci .env
         php artisan key:generate
+
+    - name: Run Migrations
+      run: php artisan migrate
 
     - name: Run Testsuite
       run: php artisan test

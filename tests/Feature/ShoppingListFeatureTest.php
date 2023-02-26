@@ -64,7 +64,7 @@ class ShoppingListFeatureTest extends TestCase
 
         $this->followingRedirects();
 
-        $this->patch('/v1/item/' . $apples->id)
+        $this->post('/v1/item/' . $apples->id . '/bought')
             ->assertSee(['Granny Smith Apples'])
             ->assertSee('data-bought="true"', escape: false);
     }

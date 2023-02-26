@@ -18,10 +18,8 @@
                     </div>
                     @if (!$item->isBought)
                     <div class="self-end">
-                        <form action="/v1/item/{{ $item->id }}" method="POST" onsubmit="javascript:return confirm('Mark &quot;{{ $item->name }}&quot; as bought?')">
-                            @method('PATCH')
+                        <form action="/v1/item/{{ $item->id }}/bought" method="POST" onsubmit="javascript:return confirm('Mark &quot;{{ $item->name }}&quot; as bought?')">
                             @csrf
-                            <input type="hidden" name="bought" value="true" />
                             <input class="bg-green-100 rounded-full pl-2 pr-2 pt-1 pb-1 mr-2 cursor-pointer hover:bg-green-300"
                                 value="✅"
                                 type="submit"

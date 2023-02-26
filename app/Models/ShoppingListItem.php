@@ -2,28 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class ShoppingListItem
+class ShoppingListItem extends Model
 {
-    public readonly string $name;
-    public readonly string $id;
-    public ?bool $isBought;
+    use HasFactory;
+    use HasUuids;
+    use SoftDeletes;
 
-    public function __construct(
-        string $name,
-        ?string $id = null,
-        ?bool $isBought = false
-    )
-    {
-        $this->name = $name;
+    protected $table = 'shoppinglistitems';
+    protected $primaryKey = 'id';
 
-        $this->isBought = boolval($isBought);
+    protected $connection = 'mysql';
 
-        if ($id) {
-            $this->id = $id;
-        } else {
-            $this->id = Str::uuid();
-        }
-    }
+    protected $attributes = [
+        'isBought' => false,
+    ];
+
+    protected $fillable = ['name', 'isBought'];
 }

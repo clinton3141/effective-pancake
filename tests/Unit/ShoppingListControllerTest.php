@@ -53,4 +53,24 @@ class ShoppingListControllerTest extends TestCase
             'isBought' => true,
         ]);
     }
+
+    public function test_controller_updates_item_ordering_and_redirects_home(): void
+    {
+        $cucumber = ShoppingListItem::create(['name' => 'Cucumber', 'order' => 0 ]);
+        $cress = ShoppingListItem::create(['name' => 'Cress', 'order' => 1 ]);
+
+        $this->call('PATCH', '/v1/list', [
+            'order' => [ $cress->id, $cucumber->id ],
+        ])
+            ->assertRedirect('/');
+
+        $this->assertDatabaseHas('shoppinglistitems', [
+            'id' => $cress->id,
+            'order' => 0,
+        ]);
+        $this->assertDatabaseHas('shoppinglistitems', [
+            'id' => $cucumber->id,
+            'order' => 1,
+        ]);
+    }
 }

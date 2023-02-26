@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\ShoppingListItem;
 
@@ -13,7 +14,7 @@ class ShoppingListController extends Controller
 {
     public function showAll(): View
     {
-        $items = ShoppingListItem::orderBy('created_at')->get();
+        $items = ShoppingListItem::orderBy('order')->get();
 
         return view(
             'index',
@@ -27,8 +28,11 @@ class ShoppingListController extends Controller
             'name' => 'required|string|max:255'
         ]);
 
+        // possible race condition here. need a locking mechanism in the future
+        $order = ShoppingListItem::max('order');
         ShoppingListItem::create([
-            'name' => $validated['name']
+            'name' => $validated['name'],
+            'order' => $order + 1,
         ]);
 
         return redirect('/');
@@ -61,6 +65,27 @@ class ShoppingListController extends Controller
             $item->isBought = true;
             $item->save();
         }
+
+        return redirect('/');
+    }
+
+    public function sort(Request $request): RedirectResponse
+    {
+        // This validates that all items are accounted for.
+        // There is probably a more efficient way of doing this
+        // when more familiar with Laravel.
+        $count = ShoppingListItem::count();
+        $validated = $request->validate([
+            'order' => 'required|array|min:' . $count,
+            'order.*' => 'required|uuid|distinct|exists:shoppinglistitems,id'
+        ]);
+
+        DB::transaction(function () use ($validated) {
+            foreach ($validated['order'] as $order => $id) {
+                ShoppingListItem::where('id', $id)
+                    ->update(['order' => $order]);
+            }
+        });
 
         return redirect('/');
     }

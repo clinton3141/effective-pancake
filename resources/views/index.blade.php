@@ -7,9 +7,9 @@
 @if (count($shoppingList) === 0)
     <p class="pt-5 pb-5">Your shopping list is empty</p>
     @else
-    <ul role="list" class="max-w-md marker:text-red-400 pt-5 pb-5 list-disc pl-5 space-y-3">
+    <ul role="list" id="shopping-list" class="max-w-md marker:text-red-400 pt-5 pb-5 list-disc pl-5 space-y-3">
         @foreach ($shoppingList as $item)
-            <li class="mt-0">
+            <li class="mt-0 cursor-move" data-item-id="{{ $item->id }}">
                 <div class="flex">
                     <div
                         class="flex-auto pt-1 {{ $item->isBought ? " text-stone-400 line-through" : ""}}"
@@ -18,7 +18,7 @@
                     </div>
                     @if (!$item->isBought)
                     <div class="self-end">
-                        <form action="/v1/item/{{ $item->id }}" method="POST" onsubmit="javascript:return confirm('Have you bought &quot;{{ $item->name }}&quot;?')">
+                        <form action="/v1/item/{{ $item->id }}" method="POST" onsubmit="javascript:return confirm('Mark &quot;{{ $item->name }}&quot; as bought?')">
                             @method('PATCH')
                             @csrf
                             <input type="hidden" name="bought" value="true" />
@@ -42,5 +42,18 @@
         @endforeach
     </ul>
     @endif
-    <p><a class="rounded-lg p-2 bg-blue-200 hover:bg-blue-400 cursor-pointer" href="/item">Add an item</a></p>
+
+    <div class="flex">
+        <p class="flex-auto pt-1"><a class="rounded-lg p-2 bg-blue-200 hover:bg-blue-400" href="/item">Add an item</a></p>
+
+        <!-- TODO: ideally this should be invisible to the user and done with AJAX -->
+        <form class="flex-auto" class="m-0" action="/v1/list" method="post">
+            @csrf
+            @method('patch')
+            @foreach ($shoppingList as $item)
+            <input type="hidden" class="sort-order" name="order[]" value="{{ $item->id }}" />
+            @endforeach
+            <input type="submit" value="Save order" id="save-order-button" class="hidden rounded-lg p-1 pl-2 pr-2 bg-blue-200 cursor-pointer hover:bg-blue-400" />
+        </form>
+    </div>
 @endsection

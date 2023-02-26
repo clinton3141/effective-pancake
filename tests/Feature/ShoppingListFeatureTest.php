@@ -58,4 +58,15 @@ class ShoppingListFeatureTest extends TestCase
             ->assertSee(['Granny Smith Apples'])
             ->assertSee('data-bought="true"', escape: false);
     }
+
+    public function test_shopping_list_items_reordered(): void
+    {
+        $milk = ShoppingListItem::create(['name' => 'Milk', 'order' => 0]);
+        $water = ShoppingListItem::create(['name' => 'Water', 'order' => 0]);
+
+        $this->followingRedirects();
+
+        $this->patch('/v1/list/', ['order' => [ $water->id, $milk->id ]])
+            ->assertSeeInOrder(['Water', 'Milk']);
+    }
 }

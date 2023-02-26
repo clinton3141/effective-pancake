@@ -20,4 +20,22 @@
             </div>
         </div>
     </body>
+    <script src="http://SortableJS.github.io/Sortable/Sortable.js"></script>
+    <script>
+    window.addEventListener('DOMContentLoaded', function () {
+        const list = document.getElementById('shopping-list');
+        if (list) {
+            Sortable.create(list, {
+                animation: 150,
+                onSort: function() {
+                    const inputs = document.getElementsByClassName('sort-order');
+                    [].slice.call(inputs).forEach(function (input, index) {
+                        input.value = list.children[index].dataset['itemId'];
+                    });
+                    document.getElementById('save-order-button').classList.remove('hidden')
+                }
+            });
+        }
+    });
+    </script>
 </html>

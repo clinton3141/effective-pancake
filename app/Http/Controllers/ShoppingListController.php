@@ -16,9 +16,16 @@ class ShoppingListController extends Controller
     {
         $items = ShoppingListItem::orderBy('order')->get();
 
+        $totalCost = $items->reduce(function(float $total, ShoppingListItem $item) {
+            return $total + $item->price;
+        }, 0);
+
         return view(
             'index',
-            ['shoppingList' => $items]
+            [
+                'shoppingList' => $items,
+                'totalCost' => $totalCost,
+            ]
         );
     }
 

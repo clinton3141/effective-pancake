@@ -41,6 +41,7 @@
             </li>
         @endforeach
     </ul>
+    <p class="text-right pr-3 mb-5">Total cost: &pound;{{ $totalCost }}</p>
     @endif
 
     <div class="flex">

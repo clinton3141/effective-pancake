@@ -38,6 +38,16 @@ class ShoppingListFeatureTest extends TestCase
             ->assertSeeInOrder(['Flour (&pound;1.95)', 'Sugar (&pound;0.95)'], escape: false);
     }
 
+    public function test_shopping_list_total_cost_is_shown(): void
+    {
+        ShoppingListItem::create(['name' => 'Rice', 'price' => 0.99]);
+        ShoppingListItem::create(['name' => 'Pasta', 'price' => 1.19]);
+
+        $this->get('/')
+            ->assertStatus(200)
+            ->assertSee('Total cost: &pound;2.18', escape: false);
+    }
+
     public function test_shopping_list_items_are_deleted(): void
     {
         $eggs = ShoppingListItem::create(['name' => 'Eggs']);

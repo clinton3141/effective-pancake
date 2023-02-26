@@ -16,12 +16,17 @@ jobs:
       mariadb:
         image: 'mariadb:10'
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: false
           MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+          MYSQL_ROOT_HOST: '%'
           MYSQL_DATABASE: '${DB_DATABASE}'
+          MYSQL_USER: '${DB_USERNAME}'
+          MYSQL_PASSWORD: '${DB_PASSWORD}'
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        volumes:
+          - './vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh'
 
     steps:
     - uses: actions/checkout@v1
